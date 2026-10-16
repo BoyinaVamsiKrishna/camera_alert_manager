@@ -37,6 +37,6 @@ def get_cam_urls(cam_id: str, url):
         else:
             return {"message": "Not a valid url"}
 
-@camera_router.delete('/camera/url/delete', status_code=204)
+@camera_router.delete('/camera/url/delete/{cam_id:str}', status_code=204)
 def delete_cam_url(cam_id: str):
     redis_client.hdel('camera:id', cam_id)
