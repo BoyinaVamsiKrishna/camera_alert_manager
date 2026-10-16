@@ -23,6 +23,20 @@ def store_cam_url(url: str):
     else:
         return {"message": "Not a valid url"}
 
+
+
+@camera_router.put('/camera/url/update/{cam_id:str}')
+def get_cam_urls(cam_id: str, url):
+    cam_status = redis_client.hexists('camera:id', cam_id)
+    if bool(cam_status):
+        result = bool(fullmatch(r'https://example\.com/camera\d+', url))
+        if result:
+            redis_client.hset('camera:id', cam_id, url)
+            output = redis_client.hget('camera:id', cam_id)
+            return {cam_id: output}
+        else:
+            return {"message": "Not a valid url"}
+
 @camera_router.delete('/camera/url/delete', status_code=204)
 def delete_cam_url(cam_id: str):
     redis_client.hdel('camera:id', cam_id)
